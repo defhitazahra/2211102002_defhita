@@ -1,0 +1,117 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(TugasGanjilApp());
+
+class TugasGanjilApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Tugas Ganjil & Interaksi DOM',
+      home: TugasGanjilPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class TugasGanjilPage extends StatefulWidget {
+  @override
+  _TugasGanjilPageState createState() => _TugasGanjilPageState();
+}
+
+class _TugasGanjilPageState extends State<TugasGanjilPage> {
+  final TextEditingController minController = TextEditingController();
+  final TextEditingController maxController = TextEditingController();
+
+  String hasil = '';
+  TextAlign textAlign = TextAlign.left;
+  Color boxColor = Colors.grey[400]!;
+
+  void hitungJumlahGanjil() {
+    int? min = int.tryParse(minController.text);
+    int? max = int.tryParse(maxController.text);
+
+    if (min == null || max == null || min > max) {
+      setState(() {
+        hasil = 'Input tidak valid.';
+      });
+      return;
+    }
+
+    int count = 0;
+    for (int i = min; i <= max; i++) {
+      if (i % 2 != 0) count++;
+    }
+
+    setState(() {
+      hasil = 'Jumlah bilangan ganjil dari $min sampai $max adalah $count';
+    });
+  }
+
+  void ubahAlignment() {
+    setState(() {
+      textAlign = textAlign == TextAlign.left ? TextAlign.center : TextAlign.left;
+    });
+  }
+
+  void ubahWarnaBox() {
+    setState(() {
+      boxColor = boxColor == Colors.grey[400] ? Colors.lightBlueAccent : Colors.grey[400]!;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tugas Ganjil & Interaksi DOM'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Min:'),
+            TextField(controller: minController, keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            Text('Max:'),
+            TextField(controller: maxController, keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: hitungJumlahGanjil,
+              child: Text('Hitung Jumlah Ganjil'),
+            ),
+            SizedBox(height: 20),
+            Text('Hasil:', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(8),
+              color: Colors.grey[200],
+              child: Text(hasil, textAlign: textAlign),
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: ubahAlignment,
+                  child: Text('Ubah Alignment Teks'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: ubahWarnaBox,
+                  child: Text('Ubah Warna Box'),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 200,
+              height: 100,
+              color: boxColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
